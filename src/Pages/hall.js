@@ -4,11 +4,12 @@ import { db } from '../keyFirebase';
 
 import Input from '../Components/input';
 import LinkMenu from '../Components/linkMenu';
+import Order from '../Components/order'
 
 function Hall() {
 
   const [menu, setMenu] = useState([]);
-  // const [cardapio, setCardapio] = useState([])
+  const [order, setOrder] = useState([]);
 
   useEffect(() => {
 
@@ -23,28 +24,34 @@ function Hall() {
       });
   }, [])
 
+  function banana(item) {  
+    setOrder([item])
+  }
+
   return (
     <div>
-      <form>
-        Nome: <Input type='text' />
-        <br></br>
-        Mesa: <Input type='number' />
-      </form>
-      <section className={css(style.menu)}>
-        {
+      <div>
+        <form>
+          Nome: <Input type='text' />
+          <br></br>
+          Mesa: <Input type='number' />
+        </form>
+        <section className={css(style.menu)}>
+          {
 
-          menu.map((item) =>
-            < LinkMenu title={item.name} children={item.price} onClick={teste} />
-          )
-        }
-      </section>
+            menu.map((item) =>
+              < LinkMenu title={item.name} children={item.price} onClick={() => banana(item)} />
+            )
+          }
+        </section>
+
+      </div>
+      <Order order = {order}/>
     </div>
   )
 };
 
-function teste() {
-  console.log('oi');
-}
+
 
 const style = StyleSheet.create({
   menu: {

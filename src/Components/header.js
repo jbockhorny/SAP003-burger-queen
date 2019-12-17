@@ -23,8 +23,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     fontFamily: 'sans-serif',
     fontSize: '30px',
-    color: 'red'
-    
+    color: 'red'   
     
   }
 
