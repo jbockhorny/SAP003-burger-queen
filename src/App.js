@@ -1,31 +1,16 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import firebase from './keyFirebase.js';
+import Hall from './Pages/hall'
+import Header from './Components/header'
 
 function App() {
-
-  const db = firebase.firestore();
-  console.log(db)
-  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <Hall />      
     </div>
-  );
+  )
+
 }
+
 
 export default App;
