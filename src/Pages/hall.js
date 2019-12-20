@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { db } from '../keyFirebase';
 
-import Input from '../Components/input';
 import LinkMenu from '../Components/linkMenu';
 import Order from '../Components/order'
 
@@ -24,29 +23,31 @@ function Hall() {
       });
   }, [])
 
-  function banana(item) {  
-    setOrder([item])
+  function updateOrder(item) {
+    const index = item.name.indexOf("Hambúrguer");
+    if(index !== -1){
+
+      console.log(item.option);
+      console.log(item.extra);
+    }
+
+    setOrder((currentState) => [...currentState, {...item, id: new Date().getTime()}])
   }
 
   return (
-    <div>
+    <div className={css(style.hall)}>
       <div>
-        <form>
-          Nome: <Input type='text' />
-          <br></br>
-          Mesa: <Input type='number' />
-        </form>
         <section className={css(style.menu)}>
           {
 
             menu.map((item) =>
-              < LinkMenu title={item.name} children={item.price} onClick={() => banana(item)} />
+              < LinkMenu className={css(style.linkMenu)} title={item.name} children={item.price} onClick={() => updateOrder(item)} />
             )
           }
         </section>
 
       </div>
-      <Order order = {order}/>
+      <Order order={order} setOrder={setOrder} />
     </div>
   )
 };
@@ -60,8 +61,18 @@ const style = StyleSheet.create({
     marginTop: '10px',
     width: '250px',
     fontFamily: 'sans-serif'
-  }
+  },
+  hall: {
+    display: 'flex',
+    flexDirection: 'row'
 
+  },
+
+  linkMenu: {
+    border: '1px solid black',
+    padding: '10px',
+    marginBottom: '10px',
+  }
 })
 
 export default Hall;
