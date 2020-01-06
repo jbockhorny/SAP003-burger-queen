@@ -1,12 +1,10 @@
 import React from 'react';
-import Hall from './Pages/hall'
-import Header from './Components/header'
+import Home from './Pages/home'
 
 function App() {
   return (
     <div>
-      <Header />
-      <Hall />
+      <Home />
     </div>
   )
 

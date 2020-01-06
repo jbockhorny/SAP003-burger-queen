@@ -1,31 +1,22 @@
 import React from 'react';
-import {css, StyleSheet} from 'aphrodite';
+import { css, StyleSheet } from 'aphrodite';
 
-const Header = () => {
+const Header = ({...props}) => {
   return (
-    <header className={css(style.header)}>
-            <img className={css(style.logo)} src={require("./logo.png")} alt="Burger Queen" /> <p>burgerQueen</p>
+    <header {...props}>
+      <img className={css(style.logo)} src={require("../../src/img/logo.png")} alt="Hamburgueria Burger Queen" />
     </header>
-    )
+  )
 }
 
 const style = StyleSheet.create({
   logo: {
-    width: '130px',
+    width: '50%',
     height: 'auto',
-    margin: '10px'
+    margin: '2%',    
   },
 
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontFamily: 'sans-serif',
-    fontSize: '30px',
-    color: 'red'   
-    
-  }
+
 
 })
 export default Header;
