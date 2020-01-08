@@ -18,30 +18,55 @@ const Order = (props) => {
   
    const [total, setTotal] = useState(0);
 
-  let totalPrice = props.order.reduce((accum, current) => accum + current.price, 0)
+  let totalPrice = props.order.reduce((accum, current) => accum + (current.price * current.counter), 0)
+  
   useEffect(() => {
     setTotal(totalPrice);
   },[props])
 
+  function decrement(item){
+
+   if(item.counter >= 2){
+      const removeCount = props.order.map(elem => {
+        return (elem.name === item.name) ? {...elem, counter: elem.counter -1} : elem
+      })
+      props.setOrder(removeCount)
+
+     }else{
+       deletePedido(item);     
+
+      }
+
+            // if (removeCount.counter === 0){
+      //   deletePedido(item)
+      // } else{
+      //   props.setOrder(removeCount) 
+
+  };
+
+  function increment(item){
+    props.counterOrder(item)
+  };
+
 
   return (
-    <section>
+    <section className={css(style.orderLayout)}>
 
       <section className={css(style.order)}>
-        <p>Pedido do cliente</p>
-        <form>
-          Nome: <Input type='text' />
-          <br></br>
-          Mesa: <Input type='number' />
-        </form>
-        {props.order.map((item) =>
-          <>
-            < LinkMenu className={css(style.linkPedido)} title={item.name} children={item.price}
-            />
-            <Button children='Delete' onClick={() => deletePedido(item)} />
-          </>)}
+ 
+        {props.order.map((item, index) => 
+<>
 
-      </section>
+          <Button children='-' onClick={() => decrement(item)}/>
+        <span>{item.counter}</span>
+          <Button children='+' onClick={() => increment(item)}/>
+            < LinkMenu className={css(style.linkPedido)}  title={item.name} children={item.price} 
+            />
+            <Button children='Delete' key={index} onClick={() => deletePedido(item)} />
+            </>
+        )}
+
+      </section >
       {(props.order.length === 0) ? '': 
       (<>
       <p>Total: {total} </p>
@@ -66,6 +91,9 @@ const style = StyleSheet.create({
   linkPedido: {
     display: 'flex',
     flexDirection: 'column'
+  },
+  orderLayout:{
+   width: '50%', 
   }
 })
 
