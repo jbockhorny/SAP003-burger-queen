@@ -10,8 +10,8 @@ const RouterHome = () => {
     <Header className={css(style.header)} />
     <nav className={css(style.linkButton)}>
 
-      <Link className={css(style.buttonHome)} to="/hall">Hall</Link>
-      <Link className={css(style.buttonHome)} to="/kitchen">Kitchen</Link>
+      <Link className={css(style.buttonHome)} to="/hall">Salão</Link>
+      <Link className={css(style.buttonHome)} to="/kitchen">Cozinha</Link>
     </nav> 
     </>   
   );

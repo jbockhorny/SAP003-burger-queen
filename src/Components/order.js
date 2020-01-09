@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, css } from 'aphrodite'
 
-import Input from './input'
 import LinkMenu from '../Components/linkMenu';
 import Button from './button';
 
 
 const Order = (props) => {
 
-  console.log('id', props.order.id);
   //Criar um id para identificar e juntar os itens iguais. 
 
   function deletePedido(item) {
