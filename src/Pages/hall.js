@@ -15,8 +15,9 @@ function Hall() {
   const [print, setPrint] = useState([]);
   const [client, setClient] = useState('');
   const [table, setTable] = useState();
-  const [extra, setExtra] = useState(false);
-
+  const [modal, setModal] = useState({ status: false });
+  const [extra, setExtra] = useState();
+  const [option, setOption] = useState({ status: false });
 
   useEffect(() => {
 
@@ -31,13 +32,16 @@ function Hall() {
       });
   }, [])
 
+  function verifyAdditional(item) {
+
+    const verify = item.extra.length > 1;
+    console.log(item.extra);
+
+    (verify) ? optionAndExtra(item) : updateOrder(item)
+  }
+
 
   function updateOrder(item) {
-
-
-    const banana = item.extra > 0;
-
-    (banana !== -1) ? optionAndExtra(item) : console.log('Não tem opções')
 
     if (order.find(element => element.name === item.name) === undefined) {
       return setOrder([...order, { ...item, id: new Date().getTime() }])
@@ -49,10 +53,26 @@ function Hall() {
 
   function optionAndExtra(item) {
 
-    setExtra(true)
+    setModal({ status: true, item })
 
-    console.log(item.option);
-    console.log(item.extra);
+  }
+
+  const addOptionAndExtra = (item) => {
+
+    if (extra !== 'Sem extra') {
+      const updateItem = { ...modal.item, price: modal.item.price + 1, name: `${modal.item.name} ${option}${extra} ` }
+      updateOrder(updateItem)
+      setModal({ status: false });
+
+    } else {
+      const updateItem = { ...modal.item, name: `${modal.item.name} ${option}${extra}` }
+      updateOrder(updateItem)
+      setModal({ status: false });
+
+    }
+    setOption("");
+    setExtra("");
+
   }
 
   function breakfast() {
@@ -89,6 +109,7 @@ function Hall() {
     setTable(inputValue);
   }
 
+
   return (
     <>
       <Header className={css(style.header)} />
@@ -105,42 +126,49 @@ function Hall() {
             <Button children='Café da Manhã' onClick={() => breakfast()} />
             <Button children='Dia inteiro' onClick={() => allDay()} />
 
+            {modal.status ? (
+              <div>
+                <h3>Opções</h3>
+                {modal.item.option.map((elem, index) => (
+                  <div key={index}>
+
+                    <input type='radio' name='Opção' checked={elem === option} onChange={() => setOption(elem)} value={elem} />
+                    <label>{elem}</label>
+                  </div>
+                ))}
+                <h3>Extras</h3>
+                {modal.item.extra.map((elem, index) => (
+                  <div key={index}>
+                    <input type='radio' name='Extra' checked={elem === extra} onChange={() => setExtra(elem)} value={elem} />
+                    <label>{elem}</label>
+                  </div>
+                ))}
+
+                <Button children='Adicionar' onClick={addOptionAndExtra} />
+              </div>
+            ) : ''}
+
             {
               print.map((item, index) =>
 
-                <LinkMenu className={css(style.linkMenu, style.active)}
-                  title={item.name} children={item.price} key={index} onClick={() => updateOrder(item)}
 
 
-                />
-
-                //Se hamburguer for selecionado e setExtra é igual a true insira o radius do extra e option, se não, não faça nada.
-
-
-                // (extra === true && item.extra > 0) ?
-                //   (elem =>
-                //     <Button children={elem.extra} />
-                //   ) : ''
+                <LinkMenu key={index} className={css(style.linkMenu, style.active)}
+                  title={item.name} children={item.price} onClick={() => verifyAdditional(item)} />
               )
             }
-
-
-
-
-
           </section>
 
         </div>
-        <>
-          {/* {(client || table) } */}
-          <p>{client}</p>
-          <p>{table}</p>
-          <Order order={order} setOrder={setOrder} counterOrder={counterOrder} />
-        </>
+        {/* {(client || table) } */}
+        <p>{client}</p>
+        <p>{table}</p>
+        <Order order={order} setOrder={setOrder} counterOrder={counterOrder} />
       </div>
     </>
-  
-  )};
+
+  )
+};
 
 
 const style = StyleSheet.create({

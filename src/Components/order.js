@@ -10,13 +10,16 @@ const Order = (props) => {
   //Criar um id para identificar e juntar os itens iguais. 
 
   function deletePedido(item) {
-    const teste = props.order.filter(elem => elem !== item);
-    props.setOrder(teste);
+    const deleteItem = props.order.filter(elem => elem !== item);
+    props.setOrder(deleteItem);
   }  
+  console.log(props.order);
   
    const [total, setTotal] = useState(0);
 
-  let totalPrice = props.order.reduce((accum, current) => accum + (current.price * current.counter), 0)
+   
+  let totalPrice = props.order.reduce((accum, current) => 
+  accum + (current.price * current.counter), 0)
   
   useEffect(() => {
     setTotal(totalPrice);
@@ -45,7 +48,6 @@ const Order = (props) => {
   function increment(item){
     props.counterOrder(item)
   };
-
 
   return (
     <section className={css(style.orderLayout)}>
