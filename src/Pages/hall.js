@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { db } from '../keyFirebase';
+import growl from 'growl-alert';
+import 'growl-alert/dist/growl-alert.css';
 
 import LinkMenu from '../Components/linkMenu';
 import Order from '../Components/order';
@@ -35,7 +37,6 @@ function Hall() {
   function verifyAdditional(item) {
 
     const verify = item.extra.length > 1;
-    console.log(item.extra);
 
     (verify) ? optionAndExtra(item) : updateOrder(item)
   }
@@ -59,11 +60,12 @@ function Hall() {
 
   const addOptionAndExtra = (item) => {
 
-    if (extra !== 'Sem extra') {
-      const updateItem = { ...modal.item, price: modal.item.price + 1, name: `${modal.item.name} ${option}${extra} ` }
+    if (!option || !extra) {
+      growl.error({ text: 'Escolha o hamburguer e o extra!', fadeAway: true, fadeAwayTimeout: 2000 })
+    } else if (extra !== 'Sem extra') {
+      const updateItem = { ...modal.item, price: modal.item.price + 1, name: `${modal.item.name} ${option} ${extra} ` }
       updateOrder(updateItem)
       setModal({ status: false });
-
     } else {
       const updateItem = { ...modal.item, name: `${modal.item.name} ${option}${extra}` }
       updateOrder(updateItem)
@@ -97,94 +99,171 @@ function Hall() {
       return (elem.name === item.name) ? { ...elem, counter: elem.counter + 1 } : elem
     })
     setOrder(includeCount)
+    console.log(item);
 
   }
-  const clientName = (e) => {
-    const inputValue = e.target.value;
-    setClient(inputValue);
+  const getClientName = (e) => {
+    let clientNameValue = e.target.value;
+    setClient(clientNameValue);
+    // setOrder([...order, {client: clientNameValue}])
   }
 
-  const clientTable = (e) => {
-    const inputValue = e.target.value;
-    setTable(inputValue);
+  const getClientTable = (e) => {
+    let clientTableValue = e.target.value;
+    setTable(clientTableValue);
   }
 
+  // const buttonStatus = 
 
   return (
-    <>
-      <Header className={css(style.header)} />
-      <p>Informações do cliente</p>
-      <form>
-        Nome: <Input id='name-client' type='text' onChange={clientName} />
-        <br></br>
-        Mesa: <Input id='table' type='number' onChange={clientTable} />
+    <div className={css(style.hall)}>
+      <nav className={css(style.navHall)}>
+        <Header className={css(style.header)} />
+        <div className={css(style.buttonHall)}>
+          <Button className={css(style.button)} children='Café da Manhã' onClick={() => breakfast()} />
+          <Button className={css(style.button)} children='Dia inteiro' onClick={() => allDay()} />
+        </div>
+      </nav>
+      <main className={css(style.main)}>
+
+      <section className={css(style.menu)}>
+        {modal.status ? (
+          <div>
+            <h3>Opções</h3>
+            {modal.item.option.map((elem, index) => (
+              <div key={index}>
+
+                <input type='radio' name='Opção' checked={elem === option} onChange={() => setOption(elem)} value={elem} />
+                <label>{elem}</label>
+              </div>
+            ))}
+            <h3>Extras</h3>
+            {modal.item.extra.map((elem, index) => (
+              <div key={index}>
+                <input type='radio' name='Extra' checked={elem === extra} onChange={() => setExtra(elem)} value={elem} />
+                <label>{elem}</label>
+              </div>
+            ))}
+
+            <Button children='Adicionar' onClick={addOptionAndExtra} />
+          </div>
+        ) : ''}
+
+        {
+          print.map((item, index) =>
+
+
+
+            <LinkMenu key={index} className={css(style.linkMenu, style.active)}
+              title={item.name} children={item.price} onClick={() => verifyAdditional(item)} />
+          )
+        }
+      </section>
+
+        <aside className={css(style.aside)}>
+        <form className={css(style.form)}>
+        <p>Informações do cliente</p>
+        <div className={css(style.input)}>
+
+          <label>
+            Nome: <Input id='name-client' type='text' onChange={getClientName} />
+          </label>
+
+          <label>
+            Mesa: <Input id='table' type='number' onChange={getClientTable} />
+          </label>
+        </div>
+
       </form>
 
-      <div className={css(style.hall)}>
-        <div>
-          <section className={css(style.menu)}>
-            <Button children='Café da Manhã' onClick={() => breakfast()} />
-            <Button children='Dia inteiro' onClick={() => allDay()} />
+      <p>Cliente: {client} Mesa: {table}</p>
+  
+      <Order order={order} setOrder={setOrder} counterOrder={counterOrder} client={client}
+        table={table} />
 
-            {modal.status ? (
-              <div>
-                <h3>Opções</h3>
-                {modal.item.option.map((elem, index) => (
-                  <div key={index}>
+        </aside>
+      
 
-                    <input type='radio' name='Opção' checked={elem === option} onChange={() => setOption(elem)} value={elem} />
-                    <label>{elem}</label>
-                  </div>
-                ))}
-                <h3>Extras</h3>
-                {modal.item.extra.map((elem, index) => (
-                  <div key={index}>
-                    <input type='radio' name='Extra' checked={elem === extra} onChange={() => setExtra(elem)} value={elem} />
-                    <label>{elem}</label>
-                  </div>
-                ))}
+      {/* <div className={css(style.hall)}>  */}
 
-                <Button children='Adicionar' onClick={addOptionAndExtra} />
-              </div>
-            ) : ''}
-
-            {
-              print.map((item, index) =>
-
-
-
-                <LinkMenu key={index} className={css(style.linkMenu, style.active)}
-                  title={item.name} children={item.price} onClick={() => verifyAdditional(item)} />
-              )
-            }
-          </section>
-
-        </div>
-        {/* {(client || table) } */}
-        <p>{client}</p>
-        <p>{table}</p>
-        <Order order={order} setOrder={setOrder} counterOrder={counterOrder} />
-      </div>
-    </>
-
+      
+        
+      
+        </main>
+    </div>
+    
   )
 };
 
 
 const style = StyleSheet.create({
-  menu: {
+
+  // form: {
+  //   display: 'flex',
+  //   flexDirection: 'column',
+  // },
+
+  navHall: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    margin: '1%',
+
+  },
+  button: {
+    display: 'flex',
+    marginLeft: '10%',
+    width: '360px',
+    height: '80px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '1%',
+    // padding: '5%',
+    fontFamily: 'sans-serif',
+    fontSize: '150%',
+    background: '#8C251C',
+    color: '#F2F2F2',
+
+  
+
+  },
+
+  main: {
+    display: 'flex',
+    margin: '1%',
+
+  },
+  aside: {
     display: 'flex',
     flexDirection: 'column',
-    marginTop: '1%',
-    width: '120%',
-    fontFamily: 'sans-serif'
   },
 
   hall: {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: 'column',
+    fontFamily: 'sans Serif',
+    fontSize: '16px',
 
+  },
+  input: {
+    display: 'flex',
+    flexDirection: 'row',
+
+  },
+  buttonHall: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent:'center',
+    // alignItems: 'center',
+
+  },
+
+  menu: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: '1%',
+    width: '30%',
+    fontFamily: 'sans-serif'
   },
 
   linkMenu: {
@@ -202,11 +281,13 @@ const style = StyleSheet.create({
   },
 
   header: {
+    width: '20%',
+    height: 'auto%',
     display: 'flex',
-    flexDirection: 'column',
+    // flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
-  }
+  },
 })
 
 export default Hall;

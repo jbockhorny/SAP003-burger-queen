@@ -21,8 +21,8 @@ const style = StyleSheet.create({
   buttonHome: {
     display:'flex',
     flexDirection: 'column',
-    width: '50%',
-    height: '50%',
+    width: '25%',
+    height: '25%',
     alignItems: 'center',
     margin: '1%',
     padding: '5%',
@@ -35,10 +35,9 @@ const style = StyleSheet.create({
 
   linkButton: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
+    justifyContent:'center',
     alignItems: 'center',
-    margin: '1%',    
-
   },
 
   header: {
@@ -46,7 +45,6 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: '10%'
   }
 
 })

@@ -11,9 +11,10 @@ const Header = ({...props}) => {
 
 const style = StyleSheet.create({
   logo: {
-    width: '50%',
-    height: 'auto',
-    margin: '2%',    
+    width: '40%',
+    height: 'auto',  
+    margin: '1%',
+
   },
 
 
