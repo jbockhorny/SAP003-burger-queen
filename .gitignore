@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-/keyFirebase.js
+/src/keyFirebase.js
 /.pnp
 .pnp.js
 
