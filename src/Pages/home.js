@@ -9,10 +9,9 @@ import Hall from './hall';
 import Kitchen from './kitchen';
 import RouterHome from '../Components/routerHome'
 
-
 function Home() {
 
-  
+
   return (
 
     <Router>
@@ -24,8 +23,8 @@ function Home() {
           <Route path="/kitchen">
             <Kitchen />
           </Route>
-          <Route exact path="/">  
-          <RouterHome />          
+          <Route exact path="/">
+            <RouterHome />
           </Route>
         </Switch>
       </div>

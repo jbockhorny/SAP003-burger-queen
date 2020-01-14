@@ -41,7 +41,6 @@ function Hall() {
     (verify) ? optionAndExtra(item) : updateOrder(item)
   }
 
-
   function updateOrder(item) {
 
     if (order.find(element => element.name === item.name) === undefined) {
@@ -49,7 +48,6 @@ function Hall() {
     } else {
       counterOrder(item)
     }
-
   }
 
   function optionAndExtra(item) {
@@ -105,15 +103,12 @@ function Hall() {
   const getClientName = (e) => {
     let clientNameValue = e.target.value;
     setClient(clientNameValue);
-    // setOrder([...order, {client: clientNameValue}])
   }
 
   const getClientTable = (e) => {
     let clientTableValue = e.target.value;
     setTable(clientTableValue);
   }
-
-  // const buttonStatus = 
 
   return (
     <div className={css(style.hall)}>
@@ -126,135 +121,182 @@ function Hall() {
       </nav>
       <main className={css(style.main)}>
 
-      <section className={css(style.menu)}>
-        {modal.status ? (
-          <div>
-            <h3>Opções</h3>
-            {modal.item.option.map((elem, index) => (
-              <div key={index}>
+        <section className={css(style.menu)}>
+          {modal.status ? (
+            <div className={css(style.modal)}>
+              <h3>Opções</h3>
+              {modal.item.option.map((elem, index) => (
+                <div key={index}>
 
-                <input type='radio' name='Opção' checked={elem === option} onChange={() => setOption(elem)} value={elem} />
-                <label>{elem}</label>
-              </div>
-            ))}
-            <h3>Extras</h3>
-            {modal.item.extra.map((elem, index) => (
-              <div key={index}>
-                <input type='radio' name='Extra' checked={elem === extra} onChange={() => setExtra(elem)} value={elem} />
-                <label>{elem}</label>
-              </div>
-            ))}
+                  <input type='radio' name='Opção' checked={elem === option} onChange={() => setOption(elem)} value={elem} />
+                  <label>{elem}</label>
+                </div>
+              ))}
+              <h3>Extras</h3>
+              {modal.item.extra.map((elem, index) => (
+                <div key={index}>
+                  <input type='radio' name='Extra' checked={elem === extra} onChange={() => setExtra(elem)} value={elem} />
+                  <label>{elem}</label>
+                </div>
+              ))}
 
-            <Button children='Adicionar' onClick={addOptionAndExtra} />
-          </div>
-        ) : ''}
+              <Button className={css(style.buttonModal)} children='Adicionar' onClick={addOptionAndExtra} />
+              <Button className={css(style.buttonModal)} children='x' onClick={() => setModal({ status: false })} />
+            </div>
+          ) : ''}
 
-        {
-          print.map((item, index) =>
+          {
+            print.map((item, index) =>
 
 
 
-            <LinkMenu key={index} className={css(style.linkMenu, style.active)}
-              title={item.name} children={item.price} onClick={() => verifyAdditional(item)} />
-          )
-        }
-      </section>
+              <LinkMenu key={index} className={css(style.linkMenu, style.active)}
+                title={item.name} children={item.price} onClick={() => verifyAdditional(item)} />
+            )
+          }
+        </section>
 
         <aside className={css(style.aside)}>
-        <form className={css(style.form)}>
-        <p>Informações do cliente</p>
-        <div className={css(style.input)}>
+          <form className={css(style.form)}>
+            <p>Resumo do pedido</p>
+            <div className={css(style.input)}>
 
-          <label>
-            Nome: <Input id='name-client' type='text' onChange={getClientName} />
-          </label>
+              <label>
+                Nome: <Input className={css(style.placeholder)} id='name-client' type='text' onChange={getClientName} value={client} placeholder={'Digite o nome'} />
+              </label>
 
-          <label>
-            Mesa: <Input id='table' type='number' onChange={getClientTable} />
-          </label>
-        </div>
+              <label className={css(style.label)}>
+                Mesa: <Input className={css(style.placeholder)} id='table' type='number' onChange={getClientTable} value={table} placeholder={'Digite a mesa'} />
+              </label>
+            </div>
 
-      </form>
+          </form>
 
-      <p>Cliente: {client} Mesa: {table}</p>
-  
-      <Order order={order} setOrder={setOrder} counterOrder={counterOrder} client={client}
-        table={table} />
+          <p>Cliente: {client} Mesa: {table}</p>
+
+          <Order order={order} setOrder={setOrder} counterOrder={counterOrder} client={client} setClient={setClient}
+            table={table} setTable={setTable} />
 
         </aside>
-      
 
-      {/* <div className={css(style.hall)}>  */}
-
-      
-        
-      
-        </main>
+      </main>
     </div>
-    
+
   )
 };
 
 
 const style = StyleSheet.create({
 
-  // form: {
-  //   display: 'flex',
-  //   flexDirection: 'column',
-  // },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
+  label: {
+    marginRight: '100px',
+  },
+  modal: {
+    background: 'blue',
+    border: '1px solid black',
+    borderRadius: '5px',
+    padding: '1vw',
+    paddingLeft: '2vw',
+    marginBottom: '1vw',
+    background: '#F28627',
+    color: '#8C251C',
+    fontFamily: 'sans-serif',
+    fontWeight: 'bold',
+
+  },
+  buttonModal: {
+    border: '1px solid black',
+    borderRadius: '5px',
+    padding: '5px 10px 5px 10px',
+    color: '#8C251C',
+    fontSize: '18px',
+    margin: '1%',
+    fontWeight: 'bold',
+
+  },
+
+  placeholder: {
+    marginRight: '100px',
+    border: '1px solid black',
+    borderRadius: '5px',
+    padding: '2%',
+  },
+
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
   navHall: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    margin: '1%',
-
+    marginRight: '4vw',
   },
+
   button: {
     display: 'flex',
     marginLeft: '10%',
-    width: '360px',
+    width: '320px',
     height: '80px',
     alignItems: 'center',
     justifyContent: 'center',
     margin: '1%',
-    // padding: '5%',
     fontFamily: 'sans-serif',
     fontSize: '150%',
     background: '#8C251C',
     color: '#F2F2F2',
-
-  
-
+    border: '1px solid black',
+    borderRadius: '5px',
   },
 
   main: {
     display: 'flex',
-    margin: '1%',
-
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    // margin: '1%',
   },
+
   aside: {
     display: 'flex',
     flexDirection: 'column',
+    padding: '2%',
+    marginBottom: '2%',
+    marginTop: '1%',
+    background: '#8C251C',
+    color: '#F2F2F2',
+    fontFamily: 'sans-serif',
+    border: '1px solid black',
+    borderRadius: '5px',
+    width: '58vw',
+    fontSize: '2vw',
   },
 
   hall: {
     display: 'flex',
     flexDirection: 'column',
     fontFamily: 'sans Serif',
-    fontSize: '16px',
-
   },
+
   input: {
     display: 'flex',
     flexDirection: 'row',
-
+    padding: '1px',
   },
+
   buttonHall: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent:'center',
-    // alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '1%',
 
   },
 
@@ -270,7 +312,12 @@ const style = StyleSheet.create({
     border: '1px solid black',
     borderRadius: '5px',
     padding: '5%',
-    marginBottom: '3%'
+    marginBottom: '3%',
+    background: '#F28627',
+    color: '#8C251C',
+    fontFamily: 'sans-serif',
+    width: '26vw',
+    fontWeight: 'bold',
   },
 
   active: {
@@ -278,15 +325,6 @@ const style = StyleSheet.create({
       border: '3px solid black',
       borderRadius: '5px'
     },
-  },
-
-  header: {
-    width: '20%',
-    height: 'auto%',
-    display: 'flex',
-    // flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
   },
 })
 

@@ -1,68 +1,117 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Burger Queen
 
-## Available Scripts
+## Índice
 
-In the project directory, you can run:
+* [1. Resumo do projeto](#1-resumo-do-projeto)
+* [2. Objetivos de aprendizagem e Considerações gerais](#2-objetivos-de-aprendizagem-e-considerações-gerais)
+* [3. Critérios de aceitação mínimos cumpridos pelo projeto](#4-critérios-de-aceitação-mínimos-cumpridos-pelo-projeto)
 
-### `npm start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+***
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## 1. Resumo do projeto
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Foi criado uma interface para ser utilizado em um _tablet_, onde é possível realizar pedidos e enviá-los
+para a cozinha.
 
-### `npm run build`
+Seguem as informações sobre o cliente:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+> Somos **Burger Queen**, um fast food 24hrs.
+>
+>A nossa proposta de serviço 24 horas foi muito bem recebida e, para continuar a
+>crescer, precisamos de um sistema que nos ajude a receber pedidos de nossos
+>clientes.
+>
+>Nós temos 2 menus. Um muito simples para o café da manhã:
+>
+>| Ítem                      |Preço R$|
+>|---------------------------|------|
+>| Café americano            |    5 |
+>| Café com leite            |    7 |
+>| Misto Quente              |   10 |
+>| Suco de fruta natural     |    7 |
+>
+>E outro menu para o resto do dia:
+>
+>| Ítem                      |Preço |
+>|---------------------------|------|
+>|**Hambúrgueres**           |   **R$**   |
+>|Hambúrguer simples         |    10|
+>|Hambúrguer duplo           |    15|
+>|**Acompanhamentos**        |   **R$**   |
+>|Batata frita               |     5|
+>|Anéis de cebola            |     5|
+>|**Bebidas**                |   **R$**   |
+>|Água 500ml                 |     5|
+>|Água 750ml                 |     7|
+>|Refrigerante 500ml         |     7|
+>|Refrigerante 750ml         |    10|
+>
+>**Importante:** Os clientes podem escolher entre hambúrgueres de carne bovina,
+>frango ou vegetariano. Além disso, por um adicional de R$ 1,00 , eles podem
+>adicionar queijo ou ovo.
+>
+>Nossos clientes são bastante indecisos, por isso é muito comum que eles mudem o
+>seu pedido várias vezes antes de finalizar.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+A interface mostra os dois menus (café da manhã e restante do dia), cada
+um com todos os seus _produtos_. O usuário pode escolher que _produtos_
+adicionar e a interface mostra o _resumo do pedido_ com o custo total.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+O aplicativo pode ser visualizado junto ao link: https://burger-queen-3311b.web.app/
 
-### `npm run eject`
+## 2. Objetivos de aprendizagem e Considerações Gerais
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+O objetivo principal envolveu o aprendizado da construção de uma interface web usando _React_. A interface também foi planejada especificamente para rodar em **tablets**. O aplicativo é um _Single Page App_.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+O aplicativo utilizou scripts `npm-scripts` e teve `start`, `build` e `deploy`, que são responsáveis por iniciar, empacotar e implantar o aplicativo, respectivamente.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## 3. Critérios de aceitação mínimos cumpridos pelo projeto
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+#### [História de usuário 1] Garçom/Garçonete deve poder anotar o seu pedido
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Eu como cliente quero poder anotar o meu pedido saber o valor de cada 
+produto e poder enviar o pedido para a cozinha para ser preparado.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+##### Critérios de aceitação que foram atendidos.
 
-### Code Splitting
+* Anotar o nome e mesa.
+* Adicionar produtos aos pedidos.
+* Excluir produtos.
+* Ver resumo e o total da compra.
+* Enviar o pedido para a cozinha (guardar em algum banco de dados).
+* Funcionar bem e se adequar a um _tablet_.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+##### Definição de pronto
 
-### Analyzing the Bundle Size
+* Foram feitos _testes_ de usabilidade e incorporado o _feedback_ do usuário.
+* Foi feito o _deploy_ do aplicativo.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+***
 
-### Making a Progressive Web App
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+## Checklist
 
-### Advanced Configuration
+### `README.md`
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+* [ ] Documentação do processo de design.
+* [ ] Inclui informações para desenvolvedores (dependências, instalação, uso, testes...)
 
-### Deployment
+#### HU
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+#### HU 1: Anotar pedidos
 
-### `npm run build` fails to minify
+* [ ] Digitar o nome do cliente.
+* [ ] Digitar a mesa.
+* [ ] Filtrar _menu_ para _café da manhã_ e _almoço/jantar_.
+* [ ] Adicionar item ao pedido.
+* [ ] Excluir item do pedido.
+* [ ] Mostrar _resumo_ do pedido com todos os itens e o total.
+* [ ] Enviar para a cozinha (isso deve salvar o pedido).
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+### UX
+
+* [ ] Funciona bem em tablets.
+* [ ] Fácil utilização em telas sensíveis ao toque.

@@ -7,126 +7,115 @@ import 'growl-alert/dist/growl-alert.css';
 import LinkMenu from '../Components/linkMenu';
 import Button from './button';
 
-// var growl = require('growl-alert')
-// require('growl-alert/dist/growl-alert.css')
-
-
-
 const Order = (props) => {
 
-  //Criar um id para identificar e juntar os itens iguais. 
+  const [status, setStatus] = useState({ status: 'Pendente' });
 
   function deletePedido(item) {
     const deleteItem = props.order.filter(elem => elem !== item);
     props.setOrder(deleteItem);
-  }  
-  
-   const [total, setTotal] = useState(0);
+  }
 
-   
-  let totalPrice = props.order.reduce((accum, current) => 
-  accum + (current.price * current.counter), 0)
-  
+  const [total, setTotal] = useState(0);
+
+
+  let totalPrice = props.order.reduce((accum, current) =>
+    accum + (current.price * current.counter), 0)
+
   useEffect(() => {
     setTotal(`R$ ${totalPrice},00`);
-  },[props])
+  }, [props])
 
-  function decrement(item){
+  function decrement(item) {
 
-   if(item.counter >= 2){
+    if (item.counter >= 2) {
       const removeCount = props.order.map(elem => {
-        return (elem.name === item.name) ? {...elem, counter: elem.counter -1} : elem
+        return (elem.name === item.name) ? { ...elem, counter: elem.counter - 1 } : elem
       })
       props.setOrder(removeCount)
 
-     }else{
-       deletePedido(item);     
+    } else {
+      deletePedido(item);
 
-      }
-
-            // if (removeCount.counter === 0){
-      //   deletePedido(item)
-      // } else{
-      //   props.setOrder(removeCount) 
-
+    }
   };
 
-  function increment(item){
+  function increment(item) {
     props.counterOrder(item)
 
   };
 
-  function sendOrder(item){
+  function sendOrder(item) {
 
-    if(!props.client || !props.table){
-      growl.error('Escreva o nome do cliente e da mesa.');
+    if (!props.client || !props.table) {
+      growl.error({ text: 'Escreva o nome do cliente e da mesa.', fadeAway: true, fadeAwayTimeout: 2000 })
     } else {
-      let timestamp = new Date().getTime();
-      growl.success('Pedido enviado!');
-      db.collection("order").add({
+      let timestamp = new Date();
+      console.log(timestamp);
+      growl.success({ text: 'Pedido enviado!', fadeAway: true, fadeAwayTimeout: 2000 })
+      db.collection("Order").add({
         nameClient: props.client,
         table: props.table,
         order: props.order,
         hour: timestamp,
+        status: status,
 
-    })
-    .then(function(docRef) {
-        console.log("Document written with ID: ", docRef.id);
-    })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
-    });
-    
+      })
+        .then(function (docRef) {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
+      props.setOrder([]);
+      props.setTable('');
+      props.setClient('');
     }
-    
+
   }
 
   return (
     <section className={css(style.orderLayout)}>
 
       <section className={css(style.order)}>
- 
-        {props.order.map((item, index) => 
-<div>
 
-          <Button children='-' onClick={() => decrement(item)}/>
-        <span>{item.counter}</span>
-          <Button children='+' onClick={() => increment(item)}/>
-            < LinkMenu className={css(style.linkPedido)}  title={item.name} children={item.price} 
+        {props.order.map((item, index) =>
+          <div>
+
+            <Button className={css(style.button)} children='-' onClick={() => decrement(item)} />
+            <span>{item.counter}</span>
+            <Button className={css(style.button)} children='+' onClick={() => increment(item)} />
+            < LinkMenu className={css(style.linkPedido)} title={item.name} children={item.price}
             />
-            <Button children='Delete' key={index} onClick={() => deletePedido(item)} />
-            </div>
+            <Button className={css(style.button)} children='x' key={index} onClick={() => deletePedido(item)} />
+          </div>
         )}
 
       </section >
-      {(props.order.length === 0) ? '': 
-      (<>
-      <p>Total: {total} </p>
-      <Button children='Enviar pedido' onClick = {() => sendOrder(props.order)}/>
-      </>
-  )}
+      {(props.order.length === 0) ? '' :
+        (<>
+          <p>Total: {total} </p>
+          <Button className={css(style.button)} children='Enviar pedido' onClick={() => sendOrder(props.order)} />
+        </>
+        )}
     </section>
 
   )
 
 }
 
-
 const style = StyleSheet.create({
 
-  // order: {
-  //   padding: '10px',
-  //   marginBottom: '10px',
-  //   width: '500px'
-  // },
-
-  // linkPedido: {
-  //   display: 'flex',
-  //   flexDirection: 'column'
-  // },
-  // orderLayout:{
-  //  width: '50%', 
-  // }
+  button: {
+    border: '1px solid black',
+    borderRadius: '5px',
+    padding: '5px 10px 5px 10px',
+    color: '#8C251C',
+    fontSize: '18px',
+    margin: '1%',
+    fontWeight: 'bold',
+  },
+  
 })
 
 export default Order;
