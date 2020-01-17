@@ -15,21 +15,12 @@ function Home() {
   return (
 
     <Router>
-      <div>
         <Switch>
-          <Route path="/hall">
-            <Hall />
-          </Route>
-          <Route path="/kitchen">
-            <Kitchen />
-          </Route>
-          <Route exact path="/">
-            <RouterHome />
-          </Route>
+          <Route path="/hall" component={Hall} />
+          <Route path="/kitchen" component={Kitchen} />
+          <Route exact path="/" component={RouterHome} />
         </Switch>
-      </div>
-    </Router>
-
+    </Router> 
   )
 
 }
