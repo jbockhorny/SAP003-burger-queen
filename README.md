@@ -1,5 +1,7 @@
 # Burger Queen
 
+![]public/img/logo.png
+
 ## Índice
 
 * [1. Resumo do projeto](#1-resumo-do-projeto)
