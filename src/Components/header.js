@@ -4,16 +4,17 @@ import { css, StyleSheet } from 'aphrodite';
 const Header = ({ ...props }) => {
   return (
     <header {...props}>
-      <img className={css(style.logo)} src={require("../../src/img/logo.png")} alt="Hamburgueria Burger Queen" />
+      <img className={css(style.logo)} src={'./img/logo.png'} alt="Hamburgueria Burger Queen" />
     </header>
   )
 }
 
 const style = StyleSheet.create({
   logo: {
-    width: '50%',
+    width: '30%',
     height: 'auto',
-    margin: '1%',
+    marginTop: '8%',
+    marginBottom: '2%',
   },
 })
 export default Header;

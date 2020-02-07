@@ -9,6 +9,7 @@
     "aphrodite": "^2.4.0",
     "firebase": "^7.6.0",
     "growl-alert": "^1.0.1",
+    "mdlinks": "git+https://github.com/jbockhorny/SAP003-md-links.git",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",

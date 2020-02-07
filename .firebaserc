@@ -1,5 +1,6 @@
 {
   "projects": {
-    "burger queen": "burger-queen-3311b"
+    "burger queen": "burger-queen-3311b",
+    "default": "burger-queen-3311b"
   }
 }

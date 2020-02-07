@@ -4,17 +4,156 @@ import { db } from '../keyFirebase';
 import growl from 'growl-alert';
 import 'growl-alert/dist/growl-alert.css';
 
+import Header from '../Components/header';
+import Button from '../Components/button';
+import Input from '../Components/input';
 import LinkMenu from '../Components/linkMenu';
 import Order from '../Components/order';
-import Button from '../Components/button';
-import Header from '../Components/header';
-import Input from '../Components/input';
+
+
+const style = StyleSheet.create({
+
+  hall: {
+    margin: '0',
+    display: 'flex',
+    flexDirection: 'column',
+    fontFamily: 'sans Serif',
+    background: 'black',
+    width: '100vw',
+    height: '100vw', 
+    padding: '1vw',
+  },
+
+  navHall: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginRight: '4vw',
+  },
+
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '2%',
+  },
+
+  buttonHall: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  button: {
+    display: 'flex',
+    width: '30vw',
+    height: '8vw',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '2vw',
+    fontFamily: 'sans-serif',
+    fontSize: '2vw',
+    background: '#8C251C',
+    color: '#F2F2F2',
+    border: '1px solid black',
+    borderRadius: '1vw',
+    marginLeft: '1vw',
+  },
+
+  activeButtonMenu: {
+    ':active': {
+      color: '#8C251C',
+      background: '#F2F2F2',
+    },
+  },
+
+  main: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+
+  menu: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: '1vw',
+    width: '30vw',
+    fontFamily: 'sans-serif'
+  },
+
+  modal: {
+    border: '1px solid black',
+    borderRadius: '1vw',
+    padding: '1vw',
+    paddingLeft: '2vw',
+    margin: '0 1vw 1vw 0',
+    background: '#F28627',
+    color: '#8C251C',
+    fontFamily: 'sans-serif',
+    fontWeight: 'bold',
+    fontSize: '90%',
+  },
+
+  buttonModal: {
+    border: '1px solid black',
+    borderRadius: '1vw',
+    padding: '1vw 2vw',
+    color: '#F28627',
+    background: '#8C251C',
+    fontSize: '90%',
+    margin: '1vw 2vw',
+    fontWeight: 'bold',
+  },
+
+  activeLinkMenu: {
+    ':active': {
+      background: '#8C251C',
+      color: '#F28627',
+    },
+  },
+
+  linkMenu: {
+    display: 'flex',
+    width: '25vw',
+    border: '1px solid black',
+    borderRadius: '1vw',
+    padding: '8%',
+    marginBottom: '3%',
+    background: '#F28627',
+    color: 'black',
+    fontFamily: 'sans-serif',
+    fontWeight: 'bold',
+    fontSize: '90%',
+  },
+
+  icon: {
+    width: '10%',
+    height: 'auto',
+    marginRight: '2%',
+  },
+
+  aside: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '2%',
+    marginBottom: '2%',
+    marginTop: '1%',
+    background: '#8C251C',
+    color: '#F2F2F2',
+    fontFamily: 'sans-serif',
+    border: '1px solid black',
+    borderRadius: '1vw',
+    width: '58vw',
+    fontSize: '2vw',
+  },
+})
 
 function Hall() {
 
   const [menu, setMenu] = useState([]);
+  const [printMenu, setPrintMenu] = useState([]);
   const [order, setOrder] = useState([]);
-  const [print, setPrint] = useState([]);
   const [client, setClient] = useState('');
   const [table, setTable] = useState();
   const [modal, setModal] = useState({ status: false });
@@ -34,11 +173,34 @@ function Hall() {
       });
   }, [])
 
+  function breakfast() {
+
+    const sliceMenu = menu.filter(item =>
+      (item.breakfast === true)
+    )
+    setPrintMenu(sliceMenu);
+  }
+
+  function allDay() {
+
+    const sliceMenu = menu.filter(item =>
+      (item.breakfast === false)
+    )
+    setPrintMenu(sliceMenu);
+
+  }
+
   function verifyAdditional(item) {
 
-    const verify = item.extra.length > 1;
+    const findExtra = item.extra.length > 1;
 
-    (verify) ? optionAndExtra(item) : updateOrder(item)
+    (findExtra) ? optionAndExtra(item) : updateOrder(item)
+  }
+
+  function optionAndExtra(item) {
+
+    setModal({ status: true, item })
+
   }
 
   function updateOrder(item) {
@@ -50,22 +212,65 @@ function Hall() {
     }
   }
 
-  function optionAndExtra(item) {
+  function decrement(item) {
 
-    setModal({ status: true, item })
+    if (item.counter > 1) {
+      const removeCount = order.map(elem => {
+        return (elem.name === item.name) ? { ...elem, counter: elem.counter - 1 } : elem
+      })
+      setOrder(removeCount)
 
+    } else {
+      deleteOrder(item);
+
+    }
+  };
+
+  function increment(item) {
+    counterOrder(item)
+
+  };
+
+  function deleteOrder(item) {
+    const deleteItem = order.filter(elem => elem !== item);
+    setOrder(deleteItem);
   }
 
-  const addOptionAndExtra = (item) => {
+  function sendOrder(order) {
+
+    if (!client || !table) {
+      growl.error({ text: 'Escreva o nome do cliente e da mesa.', fadeAway: true, fadeAwayTimeout: 2000 })
+    } else {
+      let timestamp = new Date();
+      growl.success({ text: 'Pedido enviado!', fadeAway: true, fadeAwayTimeout: 2000 })
+      db.collection("Order").add({
+        nameClient: client,
+        table: table,
+        order: order,
+        status: "Pendente",
+        hour: timestamp,
+      })
+        .then()
+        .catch(function () {
+          growl.error({ text: 'Falha no sistema. Por favor, refaça o Pedido!', fadeAway: true, fadeAwayTimeout: 2000 })
+        });
+      setOrder([]);
+      setTable('');
+      setClient('');
+    }
+  }
+
+
+  const addOptionAndExtra = () => {
 
     if (!option || !extra) {
       growl.error({ text: 'Escolha o hamburguer e o extra!', fadeAway: true, fadeAwayTimeout: 2000 })
     } else if (extra !== 'Sem extra') {
-      const updateItem = { ...modal.item, price: modal.item.price + 1, name: `${modal.item.name} ${option} ${extra} ` }
+      const updateItem = { ...modal.item, price: modal.item.price + 1, name: `${modal.item.name} ${option} com ${extra} ` }
       updateOrder(updateItem)
       setModal({ status: false });
     } else {
-      const updateItem = { ...modal.item, name: `${modal.item.name} ${option}${extra}` }
+      const updateItem = { ...modal.item, name: `${modal.item.name} ${option}` }
       updateOrder(updateItem)
       setModal({ status: false });
 
@@ -75,29 +280,11 @@ function Hall() {
 
   }
 
-  function breakfast() {
-
-    const sliceMenu = menu.filter(item =>
-      (item.breakfast === true)
-    )
-    setPrint(sliceMenu);
-  }
-
-  function allDay() {
-
-    const sliceMenu = menu.filter(item =>
-      (item.breakfast === false)
-    )
-    setPrint(sliceMenu);
-
-  }
-
   function counterOrder(item) {
     const includeCount = order.map(elem => {
       return (elem.name === item.name) ? { ...elem, counter: elem.counter + 1 } : elem
     })
     setOrder(includeCount)
-    console.log(item);
 
   }
   const getClientName = (e) => {
@@ -110,13 +297,17 @@ function Hall() {
     setTable(clientTableValue);
   }
 
+  let totalPrice = order.reduce((accum, current) =>
+    accum + (current.price * current.counter), 0)
+
   return (
     <div className={css(style.hall)}>
       <nav className={css(style.navHall)}>
         <Header className={css(style.header)} />
+        {/* <Button children= "Voltar" /> */}
         <div className={css(style.buttonHall)}>
-          <Button className={css(style.button)} children='Café da Manhã' onClick={() => breakfast()} />
-          <Button className={css(style.button)} children='Dia inteiro' onClick={() => allDay()} />
+          <Button className={css(style.button, style.activeButtonMenu)} children='Café da Manhã' onClick={() => breakfast()} />
+          <Button className={css(style.button, style.activeButtonMenu)} children='Dia inteiro' onClick={() => allDay()} />
         </div>
       </nav>
       <main className={css(style.main)}>
@@ -128,14 +319,14 @@ function Hall() {
               {modal.item.option.map((elem, index) => (
                 <div key={index}>
 
-                  <input type='radio' name='Opção' checked={elem === option} onChange={() => setOption(elem)} value={elem} />
+                  <Input type='radio' name='Opção' checked={elem === option} onChange={() => setOption(elem)} value={elem} />
                   <label>{elem}</label>
                 </div>
               ))}
               <h3>Extras</h3>
               {modal.item.extra.map((elem, index) => (
                 <div key={index}>
-                  <input type='radio' name='Extra' checked={elem === extra} onChange={() => setExtra(elem)} value={elem} />
+                  <Input type='radio' name='Extra' checked={elem === extra} onChange={() => setExtra(elem)} value={elem} />
                   <label>{elem}</label>
                 </div>
               ))}
@@ -146,186 +337,34 @@ function Hall() {
           ) : ''}
 
           {
-            print.map((item, index) =>
+            printMenu.map((item, index) =>
 
-
-
-              <LinkMenu key={index} className={css(style.linkMenu, style.active)}
-                title={item.name} children={item.price} onClick={() => verifyAdditional(item)} />
+              <LinkMenu key={index} className={css(style.linkMenu, style.activeLinkMenu)}
+                onClick={() => verifyAdditional(item)} >
+                <img className={css(style.icon)} src={'./img/' + item.name +'.png'} />
+                {item.name} {` ${item.price},00`}
+              </LinkMenu>
             )
           }
+
         </section>
-
-        <aside className={css(style.aside)}>
-          <form className={css(style.form)}>
-            <p>Resumo do pedido</p>
-            <div className={css(style.input)}>
-
-              <label>
-                Nome: <Input className={css(style.placeholder)} id='name-client' type='text' onChange={getClientName} value={client} placeholder={'Digite o nome'} />
-              </label>
-
-              <label className={css(style.label)}>
-                Mesa: <Input className={css(style.placeholder)} id='table' type='number' onChange={getClientTable} value={table} placeholder={'Digite a mesa'} />
-              </label>
-            </div>
-
-          </form>
-
-          <p>Cliente: {client} Mesa: {table}</p>
-
-          <Order order={order} setOrder={setOrder} counterOrder={counterOrder} client={client} setClient={setClient}
-            table={table} setTable={setTable} />
-
-        </aside>
+        <Order 
+          order={order} 
+          onClientChange={getClientName} 
+          onTableChange={getClientTable} 
+          client={client} 
+          table={table} 
+          increment={increment} 
+          decrement={decrement} 
+          deleteOrder={deleteOrder} 
+          totalPrice={totalPrice} 
+          sendOrder={sendOrder}
+        /> 
 
       </main>
     </div>
 
   )
-};
-
-
-const style = StyleSheet.create({
-
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-
-  label: {
-    marginRight: '100px',
-  },
-  modal: {
-    background: 'blue',
-    border: '1px solid black',
-    borderRadius: '5px',
-    padding: '1vw',
-    paddingLeft: '2vw',
-    marginBottom: '1vw',
-    background: '#F28627',
-    color: '#8C251C',
-    fontFamily: 'sans-serif',
-    fontWeight: 'bold',
-
-  },
-  buttonModal: {
-    border: '1px solid black',
-    borderRadius: '5px',
-    padding: '5px 10px 5px 10px',
-    color: '#8C251C',
-    fontSize: '18px',
-    margin: '1%',
-    fontWeight: 'bold',
-
-  },
-
-  placeholder: {
-    marginRight: '100px',
-    border: '1px solid black',
-    borderRadius: '5px',
-    padding: '2%',
-  },
-
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  navHall: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginRight: '4vw',
-  },
-
-  button: {
-    display: 'flex',
-    marginLeft: '10%',
-    width: '320px',
-    height: '80px',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '1%',
-    fontFamily: 'sans-serif',
-    fontSize: '150%',
-    background: '#8C251C',
-    color: '#F2F2F2',
-    border: '1px solid black',
-    borderRadius: '5px',
-  },
-
-  main: {
-    display: 'flex',
-    flexDirection: 'row',
-    // justifyContent: 'space-between',
-    // margin: '1%',
-  },
-
-  aside: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '2%',
-    marginBottom: '2%',
-    marginTop: '1%',
-    background: '#8C251C',
-    color: '#F2F2F2',
-    fontFamily: 'sans-serif',
-    border: '1px solid black',
-    borderRadius: '5px',
-    width: '58vw',
-    fontSize: '2vw',
-  },
-
-  hall: {
-    display: 'flex',
-    flexDirection: 'column',
-    fontFamily: 'sans Serif',
-  },
-
-  input: {
-    display: 'flex',
-    flexDirection: 'row',
-    padding: '1px',
-  },
-
-  buttonHall: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: '1%',
-
-  },
-
-  menu: {
-    display: 'flex',
-    flexDirection: 'column',
-    margin: '1%',
-    width: '30%',
-    fontFamily: 'sans-serif'
-  },
-
-  linkMenu: {
-    border: '1px solid black',
-    borderRadius: '5px',
-    padding: '5%',
-    marginBottom: '3%',
-    background: '#F28627',
-    color: '#8C251C',
-    fontFamily: 'sans-serif',
-    width: '26vw',
-    fontWeight: 'bold',
-  },
-
-  active: {
-    ':active': {
-      border: '3px solid black',
-      borderRadius: '5px'
-    },
-  },
-})
+}
 
 export default Hall;
