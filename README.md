@@ -1,6 +1,6 @@
 # Burger Queen
 
-![]public/img/logo.png
+![](public/img/logo.png)
 
 ## Índice
 
